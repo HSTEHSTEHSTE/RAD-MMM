@@ -48,6 +48,7 @@ from maskedbatchnorm1d import MaskedBatchNorm1d
 from scipy.io.wavfile import write as write_wav
 from vocoders.vocoder_utils import get_vocoder
 from vocoders.vocoder_utils import get_audio_for_mels
+from lightning.pytorch.loggers import WandbLogger
 
 
 class TTSModel(LightningModule):
@@ -236,6 +237,7 @@ class TTSModel(LightningModule):
             freeze(self.attention)
             print("Loaded pretrained text, speaker, attention modules")
         self.toggle_syncbnorm(use_syncbnorm)
+
 
 
     def toggle_syncbnorm(self, use_syncbnorm=False):
@@ -588,7 +590,7 @@ class TTSModel(LightningModule):
             os.chmod(self.prediction_output_dir, 0o775)
             print("predictions saved to %s" %(self.prediction_output_dir))
         if self.predict_mode == "tts":
-            print(batch)
+            # print(batch)
             audio_outputs = self.sample_full(batch['script'], batch['spk_id'], batch['decoder_spk_id'],
                                              batch['f0_spk_id'], batch['energy_spk_id'],
                                              batch['duration_spk_id'],

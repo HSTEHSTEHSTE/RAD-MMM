@@ -83,7 +83,7 @@ def to_image(x):
 
 def update_params(config, params):
     for param in params:
-        print(param)
+        # print(param)
         k, v = param.split("=")
         try:
             v = ast.literal_eval(v)

@@ -4,7 +4,7 @@ data:
   use_prior_interpolator: true
   training_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.0
+      basedir: multilingual-dataset/opensource/LJSpeech-1.1
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_train_filelist_phonemized.txt
@@ -38,13 +38,13 @@ data:
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: fr_FR
       phonemized: true
-    IIIT-HYD:
-      basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
-      sampling_rate: 16khz_single_channel
-      filelist_basedir: datasets/opensource/
-      filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_train_phonemized.txt
-      language: hi_HI
-      phonemized: true
+    # IIIT-HYD:
+    #   basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
+    #   sampling_rate: 16khz_single_channel
+    #   filelist_basedir: datasets/opensource/
+    #   filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_train_phonemized.txt
+    #   language: hi_HI
+    #   phonemized: true
     ED:
       basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
       sampling_rate: 16khz
@@ -54,7 +54,7 @@ data:
       phonemized: true
   validation_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.0
+      basedir: multilingual-dataset/opensource/LJSpeech-1.1
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
@@ -88,13 +88,13 @@ data:
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: fr_FR
       phonemized: true
-    IIIT-HYD:
-      basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
-      sampling_rate: 16khz_single_channel
-      filelist_basedir: datasets/opensource/
-      filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_val_phonemized.txt
-      language: hi_HI
-      phonemized: true
+    # IIIT-HYD:
+    #   basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
+    #   sampling_rate: 16khz_single_channel
+    #   filelist_basedir: datasets/opensource/
+    #   filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_val_phonemized.txt
+    #   language: hi_HI
+    #   phonemized: true
     ED:
       basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
       sampling_rate: 16khz
@@ -153,7 +153,8 @@ data:
     aug_types: ["none","scale_formant","scale_formant"]
     aug_scales: [1.0,0.9,1.10]
     aug_probabilities: [0.6,0.2,0.2]
-    aug_languages_applicable: ["te_TE","hi_HI","mar_MAR","en_US","fr_FR","de_DE","pt_BR","es_ES","es_MX","en_UK","es_CO"]
+    # aug_languages_applicable: ["te_TE","hi_HI","mar_MAR","en_US","fr_FR","de_DE","pt_BR","es_ES","es_MX","en_UK","es_CO"]
+    aug_languages_applicable: ["te_TE","mar_MAR","en_US","fr_FR","de_DE","pt_BR","es_ES","es_MX","en_UK","es_CO"]
     num_aug_in_batch: 1
     randomize_transform: false
     n_augmentations: 2

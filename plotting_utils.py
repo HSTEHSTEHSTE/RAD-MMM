@@ -73,9 +73,7 @@ def plot_alignment_to_numpy(alignment, title='', info=None, phoneme_seq=None,
         ax.hlines(np.arange(len(phoneme_seq)), xmin=0.0, xmax=max(ax.get_xticks()))
 
     fig.canvas.draw()
-    data = save_figure_to_numpy(fig)
-    plt.close()
-    return data
+    return fig
 
 
 def plot_curves_to_numpy(targets, outputs, xlabel, ylabel):
@@ -90,6 +88,4 @@ def plot_curves_to_numpy(targets, outputs, xlabel, ylabel):
     plt.tight_layout()
 
     fig.canvas.draw()
-    data = save_figure_to_numpy(fig)
-    plt.close()
-    return data
+    return fig

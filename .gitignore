@@ -6,3 +6,4 @@ outdir/*
 .ipynb_checkpoints/*
 tutorials/out1/*
 tutorials/run1/*
+exp/*

@@ -32,6 +32,7 @@ import torch.nn.functional as F
 import torch
 from numba import jit
 import traceback
+import wandb
 
 class LogDecoderSamplesCallback(pl.Callback):
     def on_validation_batch_end(self, trainer, pl_module, outputs, batch,
@@ -50,28 +51,35 @@ class LogDecoderSamplesCallback(pl.Callback):
             attn_soft = reconstruction_outputs['attn_soft'][:, :, :, :in_lens.lengths[0]]
             audioname = os.path.basename(audiopaths[0])
 
-            pl_module.logger.experiment.add_image(
-                'attention_weights_soft',
-                plot_alignment_to_numpy(
-                    attn_soft[0, 0].data.cpu().numpy().T, title=audioname),
-                pl_module.global_step, dataformats='HWC')
-            pl_module.logger.experiment.add_image(
-                'attention_weights_used',
-                plot_alignment_to_numpy(
-                    attn_used[0, 0].data.cpu().numpy().T, title=audioname),
-                pl_module.global_step, dataformats='HWC')
+            pl_module.logger.experiment.log(
+                data = {
+                    'attention_weights_soft': 
+                        wandb.Image(plot_alignment_to_numpy(attn_soft[0, 0].data.cpu().numpy().T, title=audioname))
+                },
+                step = pl_module.global_step)
+            pl_module.logger.experiment.log(
+                data = {
+                    'attention_weights_used': 
+                        wandb.Image(plot_alignment_to_numpy(attn_used[0, 0].data.cpu().numpy().T, title=audioname))
+                },
+                step = pl_module.global_step)
             if vocode:
                 audio_denoised = reconstruction_outputs['output_audio']
                 output_mel = reconstruction_outputs['output_mel']
                 sample_tag = "decoder_sample_gt_attributes_vocoded"
-                pl_module.logger.experiment.add_audio(sample_tag,
-                    audio_denoised[0], pl_module.global_step,
-                    pl_module.sampling_rate)
+                pl_module.logger.experiment.log(
+                    data = {
+                        sample_tag: 
+                            wandb.Audio(audio_denoised[0], sample_rate = pl_module.sampling_rate)
+                    },
+                    step = pl_module.global_step)
 
-                pl_module.logger.experiment.add_image('mel_hat',
-                    plot_mel_to_numpy(output_mel[0].data.cpu().numpy(),
-                                      title=audioname),
-                    pl_module.global_step, dataformats='HWC')
+                pl_module.logger.experiment.log(
+                    data = {
+                        'mel_hat': 
+                            wandb.Image(plot_alignment_to_numpy(output_mel[0].data.cpu().numpy(), title=audioname))
+                    },
+                    step = pl_module.global_step)
 
                 # vocode the gt mel for comparison
                 output_mel = pl_module.mel_descale(mel[0:1,:,:out_lens.lengths[0]])
@@ -82,9 +90,12 @@ class LogDecoderSamplesCallback(pl.Callback):
                 audio_denoised = audio_denoised[0].detach().cpu().numpy()
                 audio_denoised = audio_denoised / np.abs(audio_denoised).max()
                 sample_tag = "gt_mel_vocoded"
-                pl_module.logger.experiment.add_audio(sample_tag,
-                                                      audio_denoised, 0,
-                                                      pl_module.sampling_rate)
+                pl_module.logger.experiment.log(
+                    data = {
+                        sample_tag: 
+                            wandb.Audio(audio_denoised, sample_rate = pl_module.sampling_rate)
+                    },
+                    step = pl_module.global_step)
 
 
 class LogAttributeSamplesCallback(pl.Callback):
@@ -126,10 +137,12 @@ class LogAttributeSamplesCallback(pl.Callback):
                                                         shift_stats=True)
                 for i in range(len(sample_text)):
                     sample_tag = "full_pipeline_sample_vocoded_sequence_%d" %(i)
-                    pl_module.logger.experiment.add_audio(sample_tag,
-                                                          audio_denoised[i], pl_module.global_step,
-                                                          pl_module.sampling_rate)
-
+                    pl_module.logger.experiment.log(
+                        data = {
+                            sample_tag: 
+                                wandb.Audio(audio_denoised[i], sample_rate = pl_module.sampling_rate)
+                        },
+                        step = pl_module.global_step)
             self.plot_attribute_predictions_gt_duration(pl_module, outputs)
             self.sample_f0(pl_module, outputs, batch)
 
@@ -142,8 +155,12 @@ class LogAttributeSamplesCallback(pl.Callback):
             f0_plot = plot_curves_to_numpy(f0_outputs['x'][0,0].data.cpu().numpy(),
                                            f0_outputs['x_hat'][0,0].data.cpu().numpy(),
                                            't', 'F0')
-            pl_module.logger.experiment.add_image('f0_contours', f0_plot,
-                                                  pl_module.global_step, dataformats='HWC')
+            pl_module.logger.experiment.log(
+                data = {
+                    'f0_contours': 
+                        wandb.Image(f0_plot)
+                },
+                step = pl_module.global_step)
 
         if pl_module.energy_predictor is not None:
             # plot energy curves
@@ -151,16 +168,24 @@ class LogAttributeSamplesCallback(pl.Callback):
             energy_plot = plot_curves_to_numpy(energy_outputs['x'][0,0].data.cpu().numpy(),
                                                energy_outputs['x_hat'][0,0].data.cpu().numpy(),
                                                't', 'ENERGY')
-            pl_module.logger.experiment.add_image('energy_contours', energy_plot,
-                                                  pl_module.global_step, dataformats='HWC')
+            pl_module.logger.experiment.log(
+                data = {
+                    'energy_contours': 
+                        wandb.Image(energy_plot)
+                },
+                step = pl_module.global_step)
 
         if pl_module.voiced_predictor is not None:
             # plot voiced decision curves
             voiced_outputs = outputs['voiced_outputs']
             voiced_plot = plot_curves_to_numpy(voiced_outputs['x'][0,0].data.cpu().numpy(),
                                                torch.sigmoid(voiced_outputs['x_hat'][0,0]).data.cpu().numpy(), 't', 'VOICED')
-            pl_module.logger.experiment.add_image('voiced_decisions', voiced_plot,
-                                                  pl_module.global_step, dataformats='HWC')
+            pl_module.logger.experiment.log(
+                data = {
+                    'voiced_decisions': 
+                        wandb.Image(voiced_plot)
+                },
+                step = pl_module.global_step)
 
 
     def sample_f0(self, pl_module, outputs, batch):
@@ -202,9 +227,12 @@ class LogAttributeSamplesCallback(pl.Callback):
                 audio_denoised = audio_denoised[0].detach().cpu().numpy()
                 audio_denoised = audio_denoised / np.abs(audio_denoised).max()
                 sample_tag = "decoder_sample_pred_f0"
-                pl_module.logger.experiment.add_audio(sample_tag,
-                    audio_denoised, pl_module.global_step,
-                    pl_module.sampling_rate)
+                pl_module.logger.experiment.log(
+                    data = {
+                        sample_tag: 
+                            wandb.Audio(audio_denoised, sample_rate = pl_module.sampling_rate)
+                    },
+                    step = pl_module.global_step)
             except:
                 print("error occured during sample generation")
                 traceback.print_exc()
@@ -249,9 +277,12 @@ class LogAttributeSamplesCallbackv2(LogAttributeSamplesCallback):
                 audio_denoised = audio_denoised[0].detach().cpu().numpy()
                 audio_denoised = audio_denoised / np.abs(audio_denoised).max()
                 sample_tag = "decoder_sample_pred_f0"
-                pl_module.logger.experiment.add_audio(sample_tag,
-                    audio_denoised, pl_module.global_step,
-                    pl_module.sampling_rate)
+                pl_module.logger.experiment.log(
+                    data = {
+                        sample_tag: 
+                            wandb.Audio(audio_denoised, sample_rate = pl_module.sampling_rate)
+                    },
+                    step = pl_module.global_step)
             except:
                 print("error occured during sample generation")
                 traceback.print_exc()

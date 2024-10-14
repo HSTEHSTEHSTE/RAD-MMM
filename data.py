@@ -46,6 +46,7 @@ import pickle as pkl
 import torch
 import torch.utils.data
 import torch.nn.functional as F
+from torchaudio.transforms import Resample
 from scipy.io.wavfile import read
 from audio_processing import TacotronSTFT
 from scipy.stats import betabinom
@@ -57,6 +58,12 @@ from typing import Optional
 from functools import lru_cache
 from wave_transforms import WaveAugmentations
 
+
+resamplers = {}
+source_srs = [44100, 48000, 22050]
+for source_sr in source_srs:
+    resampler = Resample(source_sr, 16000)
+    resamplers[source_sr] = resampler
 
 class BetaBinomialInterpolator:
     """Interpolates alignment prior matrices to save computation.
@@ -351,7 +358,7 @@ class AudioDataset(torch.utils.data.Dataset):
 
         audio_norm = audio / self.max_wav_value
         f0, voiced_mask, p_voiced = pyin(
-            audio_norm, f0_min, f0_max, sampling_rate,
+            y = audio_norm, fmin = f0_min, fmax = f0_max, sr = sampling_rate,
             frame_length=frame_length, win_length=frame_length // 2,
             hop_length=hop_length)
         f0[~voiced_mask] = 0.0
@@ -476,8 +483,12 @@ class AudioDataset(torch.utils.data.Dataset):
             audio, sampling_rate = load_wav_to_torch(audiopath)
 
         if sampling_rate != self.sampling_rate:
-            raise ValueError("{} SR doesn't match target {} SR".format(
-                sampling_rate, self.sampling_rate))
+            if sampling_rate in resamplers and self.sampling_rate == 16000:
+                audio = resamplers[sampling_rate](audio)
+                sampling_rate = self.sampling_rate
+            else: 
+                raise ValueError("{} SR doesn't match target {} SR".format(
+                    sampling_rate, self.sampling_rate))
 
         try:
             mel = self.get_mel(audio)
@@ -623,7 +634,7 @@ class DataCollate():
         # Right zero-pad all one-hot text sequences to max input length
         batch = [item for item in batch if item is not None]
         
-        print(len(batch))
+        # print(len(batch))
         if len(batch) == 0:
             return None
 

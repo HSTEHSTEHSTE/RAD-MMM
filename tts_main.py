@@ -32,6 +32,14 @@ from utils import get_class_args
 from tts_text_processing.text_processing import TextProcessing
 from common import Encoder
 
+from lightning.pytorch import Trainer
+from lightning.pytorch.loggers import WandbLogger
+
+class RADTTSTrainer(Trainer):
+    def __init__(self):
+        super().__init__()
+        wandb_logger = WandbLogger()
+        self.logger = wandb_logger
 
 class RADTTSLightningCLI(LightningCLI):
     def add_arguments_to_parser(self, parser):
@@ -62,7 +70,7 @@ class RADTTSLightningCLI(LightningCLI):
 
 
 def lcli(args: ArgsType = None):
-    cli = RADTTSLightningCLI(TTSModel, BaseAudioDataModule, save_config_kwargs={"overwrite": True},args=args)
+    cli = RADTTSLightningCLI(TTSModel, BaseAudioDataModule, save_config_kwargs={"overwrite": True}, args=args)
 
 if __name__=="__main__":
     lcli()
