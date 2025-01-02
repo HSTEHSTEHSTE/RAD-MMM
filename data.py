@@ -175,7 +175,7 @@ class AudioDataset(torch.utils.data.Dataset):
         if self.use_prior_interpolator:
             self.prior_interpolator = BetaBinomialInterpolator()
         if speaker_ids is None or speaker_ids == '':
-            self.speaker_ids = self.create_attribute_lookup_table(self.data)
+            self.speaker_ids = self.create_attribute_lookup_table(self.data, 'speaker')
         else:
             self.speaker_ids = speaker_ids
             print("Using provided Speaker IDS map", self.speaker_ids)
@@ -280,10 +280,13 @@ class AudioDataset(torch.utils.data.Dataset):
                 data = [line.strip().split(split) for line in f]
             # print(f'processing file: {filelist_path}')
             for d in data:
+                wav_name = d[0][:-4]
+                additional_spk_symbol = wav_name.split('-')
+                additional_spk_id = '-' + additional_spk_symbol[-1]
                 dataset.append(
                     {'audiopath': os.path.join(wav_folder_prefix, d[0]),
                      'text': d[1],
-                     'speaker': d[2] + '-' + d[3] if self.combine_speaker_and_emotion else d[2],
+                     'speaker': d[2] + additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
                      'emotion': d[3],
                      'duration': float(d[4]),
                      'lmdb_key': audio_lmdb_key,

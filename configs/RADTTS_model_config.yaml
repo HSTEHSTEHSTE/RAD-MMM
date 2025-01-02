@@ -1,6 +1,6 @@
 model:
   use_accent: true
-  n_augmentations: 2
+  n_augmentations: 7
   n_speakers: 7
   n_accents: 7
   n_accent_dim: 8

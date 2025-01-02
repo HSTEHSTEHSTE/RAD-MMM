@@ -6,4 +6,21 @@ outdir/*
 .ipynb_checkpoints/*
 tutorials/out1/*
 tutorials/run1/*
+
+# Experiment directory
 exp/*
+
+# random pytorch lightning artifact
+*cache*
+
+# Actual data: ./datasets contains data mappings
+multilingual-dataset/*
+
+# Generated config file
+config.yaml
+
+# Wandb dumb directory
+wandb/*
+
+# Vocoder configs
+vocoders/hifigan_vocoder/*

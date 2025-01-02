@@ -4,37 +4,37 @@ data:
   use_prior_interpolator: true
   training_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.1
+      basedir: multilingual-dataset/opensource/LJSpeech-1.0
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_train_filelist_phonemized.txt
       language: en_US
       phonemized: true
     BerndUngerer:
       basedir: multilingual-dataset/opensource/HUI-Audio-Corpus-German/Bernd_Ungerer
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: HUI-Audio-Corpus-German/Bernd_Ungerer/berndungerer_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: de_DE
       phonemized: true
     TUX:
       basedir: multilingual-dataset/opensource/MAILABS/es_ES/male/tux
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_ES/male/tux/tux_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: es_ES
       phonemized: true
     Karen:
       basedir: multilingual-dataset/opensource/MAILABS/es_MX/female/karen_savage
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_MX/female/karen_savage/ks_audiopath_text_sid_emotion_duration_train_filelist_phonemized.txt
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet/
+      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: fr_FR
       phonemized: true
@@ -46,45 +46,45 @@ data:
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
+      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_train_phonemized.txt
       language: pt_BR
       phonemized: true
   validation_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.1
+      basedir: multilingual-dataset/opensource/LJSpeech-1.0
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: en_US
       phonemized: true
     BerndUngerer:
       basedir: multilingual-dataset/opensource/HUI-Audio-Corpus-German/Bernd_Ungerer
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: HUI-Audio-Corpus-German/Bernd_Ungerer/berndungerer_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: de_DE
       phonemized: true
     TUX:
       basedir: multilingual-dataset/opensource/MAILABS/es_ES/male/tux
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_ES/male/tux/tux_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: es_ES
       phonemized: true
     Karen:
       basedir: multilingual-dataset/opensource/MAILABS/es_MX/female/karen_savage
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_MX/female/karen_savage/ks_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet/
+      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: fr_FR
       phonemized: true
@@ -96,9 +96,9 @@ data:
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
+      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
-      filelist_basedir: datasets/opensource/
+      filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_val_phonemized.txt
       language: pt_BR
       phonemized: true
@@ -126,7 +126,25 @@ data:
   handle_phoneme: word
   handle_phoneme_ambiguous: first
   g2p_type: phonemizer
-  phonemizer_cfg: null
+  phonemizer_cfg: 
+    en_US:
+      assets/en_US_word_ipa_map.txt
+    de_DE:
+      assets/de_DE_word_ipa_map.txt
+    en_UK:
+      assets/en_UK_word_ipa_map.txt
+    es_CO:
+      assets/es_CO_word_ipa_map.txt
+    es_ES:
+      assets/es_ES_word_ipa_map.txt
+    fr_FR:
+      assets/fr_FR_word_ipa_map.txt
+    hi_HI:
+      assets/hi_HI_word_ipa_map.txt
+    pt_BR:
+      assets/pt_BR_word_ipa_map.txt
+    te_TE:
+      assets/te_TE_word_ipa_map.txt
   speaker_ids: null
   include_speakers: null
   include_emotions: [[['other'],true]]
@@ -150,11 +168,11 @@ data:
   speaker_stats_path: datasets/speaker_stats/opensource_collated_stats.json
   use_wave_augmentations: true
   wave_aug_config: 
-    aug_types: ["none", "scale_formant", "scale_formant", "scale_pitch", "scale_pitch", "scale_duration", "scale_duration"]
-    aug_scales: [1.0, 0.875, 1.25, 0.9, 1.1, 0.9, 1.1]
-    aug_probabilities: [0.4, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+    aug_types: ["none","scale_formant","scale_formant"]
+    aug_scales: [1.0,0.9,1.10]
+    aug_probabilities: [0.6,0.2,0.2]
     # aug_languages_applicable: ["te_TE","hi_HI","mar_MAR","en_US","fr_FR","de_DE","pt_BR","es_ES","es_MX","en_UK","es_CO"]
     aug_languages_applicable: ["te_TE","mar_MAR","en_US","fr_FR","de_DE","pt_BR","es_ES","es_MX","en_UK","es_CO"]
-    num_aug_in_batch: 3
+    num_aug_in_batch: 1
     randomize_transform: false
-    n_augmentations: 7
+    n_augmentations: 2

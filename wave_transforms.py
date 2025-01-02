@@ -24,8 +24,10 @@
 
 import numpy as np
 import ast
-import torch
+import torch, torchaudio
 from torch.nn import functional as F
+from pathlib import Path
+import os
 
 import parselmouth
 from parselmouth.praat import call as praat_call
@@ -78,6 +80,78 @@ def scale_duration(audio, sampling_rate, scale, f0_min=80, f0_max=600):
 
     return audio_alt
 
+
+# knn_vc = torch.hub.load('bshall/knn-vc', 'knn_vc', prematched=True, trust_repo=True, pretrained=True)
+
+# def fast_cosine_dist(source_feats: torch.Tensor, matching_pool: torch.Tensor, device: str = 'cpu') -> torch.Tensor:
+#     """ Like torch.cdist, but fixed dim=-1 and for cosine distance."""
+#     source_norms = torch.norm(source_feats, p=2, dim=-1).to(device)
+#     matching_norms = torch.norm(matching_pool, p=2, dim=-1)
+#     dotprod = -torch.cdist(source_feats[None].to(device), matching_pool[None], p=2)[0]**2 + source_norms[:, None]**2 + matching_norms[None]**2
+#     dotprod /= 2
+
+#     dists = 1 - ( dotprod / (source_norms[:, None] * matching_norms[None]) )
+#     return dists
+
+# class KNN_VC_Wrapper():
+#     def __init__(self, knn_vc):
+#         self.knn_vc_model = knn_vc
+#         self.device = knn_vc.device
+#         self.hop_length = 320
+
+#     def get_features(self, path, weights=None, vad_trigger_level=0):
+#         return self.knn_vc_model.get_features(path, weights, vad_trigger_level)
+
+#     def get_matching_set(self, wavs: list[Path] | list[torch.Tensor], weights=None, vad_trigger_level=0) -> torch.Tensor:
+#         return self.knn_vc_model.get_matching_set(wavs, weights, vad_trigger_level)
+
+#     def match_list(self, query_seq: torch.Tensor, matching_sets: list[torch.Tensor], topk: int = 4, target_duration: float | None = None):
+#         device = self.device
+#         matching_sets = [matching_set.to(device) for matching_set in matching_sets]
+#         query_seq = query_seq.to(device)
+
+#         if target_duration is not None:
+#             target_samples = int(target_duration * 16000)
+#             scale_factor = (target_samples/self.hop_length) / query_seq.shape[0] # n_targ_feats / n_input_feats
+#             query_seq = F.interpolate(query_seq.T[None], scale_factor=scale_factor, mode='linear')[0].T
+
+#         out_feats = []
+#         for matching_set in matching_sets:
+#             dists = fast_cosine_dist(query_seq, matching_set, device=device)
+#             best = dists.topk(k=topk, largest=False, dim=-1)
+#             out_feats.append(matching_set[best.indices].mean(dim=1))
+#         return out_feats
+    
+#     def vocode(self, c: torch.Tensor) -> torch.Tensor:
+#         return self.knn_vc_model.vocode(c)
+
+# knn_vc = KNN_VC_Wrapper(knn_vc)
+
+# target_spk_paths = [
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10114', # Bruno Ganz
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10092', # Bingbing Li
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09171', # Zendaya
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id01493', # Cesc Fàbregas
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09185', # Zlatan Ibrahimović
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05272', # Louis van Gaal
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00262', # Alex Morgan
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05351', # Luke Shaw
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00801', # Asamoah Gyan
+#     '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id08327' # Susie Wolff
+# ]
+# ref_wav_paths = []
+# for target_spk_path in target_spk_paths:
+#     ref_wav_paths.append([os.path.join(dp, f) for dp, dn, filenames in os.walk(target_spk_path) for f in filenames if os.path.splitext(f)[1] == '.wav'])
+# matching_sets = []
+# for ref_wav_path in ref_wav_paths:
+#     matching_sets.append(knn_vc.get_matching_set(ref_wav_path))
+
+# def convert_with_knnvc(audio, sampling_rate, scale, f0_min=80, f0_max=600):
+#     target_id = scale
+#     query_seq = knn_vc.get_features(audio)
+#     out_feats = knn_vc.match_list(query_seq, matching_sets[target_id], topk=4)
+#     out_wav = knn_vc.vocode(out_feats.unsqueeze(0)).to('cpu')
+#     return out_wav
 
 class WaveAugmentations(object):
     """

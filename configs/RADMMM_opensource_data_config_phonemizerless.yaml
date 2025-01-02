@@ -32,7 +32,7 @@ data:
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet/
+      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
@@ -46,7 +46,7 @@ data:
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
+      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_train_phonemized.txt
@@ -82,7 +82,7 @@ data:
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet/
+      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
@@ -96,7 +96,7 @@ data:
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus/
+      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
       filelist_basedir: datasets/opensource/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_val_phonemized.txt
