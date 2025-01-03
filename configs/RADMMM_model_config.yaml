@@ -1,7 +1,7 @@
 model:
   use_accent: true
   n_augmentations: 7
-  n_speakers: 7
+  n_speakers: 70
   n_accents: 7
   n_accent_dim: 8
   use_accent_emb_for_encoder: true

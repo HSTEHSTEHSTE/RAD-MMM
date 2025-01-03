@@ -24,3 +24,6 @@ wandb/*
 
 # Vocoder configs
 vocoders/hifigan_vocoder/*
+
+# Backup files
+*.bak

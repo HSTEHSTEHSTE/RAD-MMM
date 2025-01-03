@@ -42,10 +42,12 @@ import argparse
 import json
 import numpy as np
 import lmdb
+import copy
 import pickle as pkl
 import torch
 import torch.utils.data
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 from torchaudio.transforms import Resample
 from scipy.io.wavfile import read
 from audio_processing import TacotronSTFT
@@ -57,6 +59,7 @@ from scipy.ndimage import zoom
 from typing import Optional
 from functools import lru_cache
 from wave_transforms import WaveAugmentations
+from common import get_mask_from_lengths
 
 
 resamplers = {}
@@ -249,6 +252,11 @@ class AudioDataset(torch.utils.data.Dataset):
             print(self.speaker_stats)
         else:
             self.speaker_stats = None
+
+        if len(list(self.speaker_stats.keys())) == 0:
+            self.speaker_stats = self.compute_speaker_prosody_statistics()
+            with open(self.speaker_stats_path, 'w') as f:
+                json.dump(self.speaker_stats, f)
 
     def load_data(self, datasets, split='|'):
         dataset = []
@@ -466,12 +474,16 @@ class AudioDataset(torch.utils.data.Dataset):
             energy_std_key = 'energy_std'
             assert speaker_stats is not None
             energy_std_speaker = speaker_stats[energy_std_key]
+        else:
+            energy_mean_speaker = None
+            energy_std_speaker = None
 
         if energy_mean_speaker is None or \
             energy_std_speaker is None or \
-                f0_mean_speaker is None or \
-                    f0_std_speaker is None:
-            print(f'\n\n\n{speaker_name} stats are none...\n\n\n')
+                f0_mean_speaker == 0.0 or \
+                    f0_std_speaker == 0.0:
+            pass
+            # print(f'\n\n\n{speaker_name} stats are none...\n\n\n')
 
         language = data['language']
         phonemized = data['phonemized']
@@ -623,6 +635,54 @@ class AudioDataset(torch.utils.data.Dataset):
 
         return data_dict
 
+    def compute_speaker_prosody_statistics(self, num_files = 100):
+        collated_speaker_stats_dict = {}
+        for speaker in self.speaker_ids:
+            speaker_attr_dict = {}
+            trainset = copy.deepcopy(self)
+            trainset.speaker_stats = None
+            trainset.wave_augmentations = None
+            trainset.filter_by_duration_(trainset.dur_min, trainset.dur_max)
+            trainset.filter_by_speakers_((speaker, ), True)
+            data_loader = DataLoader(
+                trainset, num_workers = 32, shuffle = False,
+                batch_size = num_files, pin_memory = False, drop_last = False,
+                collate_fn = DataCollate())
+        
+            for batch in data_loader:
+                f0 = batch['f0']
+                voiced_mask = batch['voiced_mask']
+                out_lens = batch['output_lengths']
+                energy_avg = batch['energy_avg']
+                mel = batch['mel']
+                
+                log_f0 = f0.flatten()[voiced_mask.flatten().bool()]
+                f0 = torch.exp(log_f0)
+                f0_median = torch.median(f0)
+                f0_mean = f0.mean()
+                f0_std = f0.std()
+                log_f0_mean = log_f0.mean()
+                log_f0_std = log_f0.std()
+                log_f0_median = torch.median(log_f0)
+
+                mask = get_mask_from_lengths(out_lens)
+                energy_mean = energy_avg[mask].mean()
+                energy_std = energy_avg[mask].std()
+                speaker_attr_dict['f0_median'] = f0_median.item()
+                speaker_attr_dict['f0_mean'] = f0_mean.item()
+                speaker_attr_dict['f0_std'] = f0_std.item()
+                speaker_attr_dict['log_f0_median'] = log_f0_median.item()
+                speaker_attr_dict['log_f0_mean'] = log_f0_mean.item()
+                speaker_attr_dict['log_f0_std'] = log_f0_std.item()
+                speaker_attr_dict['energy_mean'] = energy_mean.item()
+                speaker_attr_dict['energy_std'] = energy_std.item()
+                speaker_attr_dict['n_files'] = mel.shape[0]
+                print(speaker, speaker_attr_dict)
+                collated_speaker_stats_dict[speaker] = speaker_attr_dict
+                break
+
+        return collated_speaker_stats_dict
+
     def __len__(self):
         return len(self.data)
 
@@ -762,9 +822,13 @@ class DataCollate():
 
             if batch[ids_sorted_decreasing[i]]['speaker_energy_mean'] is not None:
                 energy_mean[i] = batch[ids_sorted_decreasing[i]]['speaker_energy_mean']
+            else:
+                energy_mean = None
 
             if batch[ids_sorted_decreasing[i]]['speaker_energy_std'] is not None:
                 energy_std[i] = batch[ids_sorted_decreasing[i]]['speaker_energy_std']
+            else:
+                energy_std = None
 
         # essential variables
         data_dict =  {'mel': mel_padded,

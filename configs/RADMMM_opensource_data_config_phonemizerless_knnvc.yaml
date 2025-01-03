@@ -4,49 +4,49 @@ data:
   use_prior_interpolator: true
   training_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.0
+      basedir: multilingual-dataset/knnvc/opensource/LJSpeech-1.0
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_train_filelist_phonemized.txt
       language: en_US
       phonemized: true
     BerndUngerer:
-      basedir: multilingual-dataset/opensource/HUI-Audio-Corpus-German/Bernd_Ungerer
+      basedir: multilingual-dataset/knnvc/opensource/Bernd_Ungerer
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: HUI-Audio-Corpus-German/Bernd_Ungerer/berndungerer_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: de_DE
       phonemized: true
     TUX:
-      basedir: multilingual-dataset/opensource/MAILABS/es_ES/male/tux
+      basedir: multilingual-dataset/knnvc/opensource/tux
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_ES/male/tux/tux_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: es_ES
       phonemized: true
     Karen:
-      basedir: multilingual-dataset/opensource/MAILABS/es_MX/female/karen_savage
+      basedir: multilingual-dataset/knnvc/opensource/karen_savage
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_MX/female/karen_savage/ks_audiopath_text_sid_emotion_duration_train_filelist_phonemized.txt
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
+      basedir: multilingual-dataset/knnvc/opensource/nadine_eckert_boulet
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_train_filelist_filtered_phonemized.txt
       language: fr_FR
       phonemized: true
     # IIIT-HYD:
-    #   basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
+    #   basedir: multilingual-dataset/knnvc/opensource/indic-languages-tts-iiit-h
     #   sampling_rate: 16khz_single_channel
     #   filelist_basedir: datasets/opensource/
     #   filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_train_phonemized.txt
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
+      basedir: multilingual-dataset/knnvc/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_train_phonemized.txt
@@ -54,49 +54,49 @@ data:
       phonemized: true
   validation_files:
     LJS:
-      basedir: multilingual-dataset/opensource/LJSpeech-1.0
+      basedir: multilingual-dataset/knnvc/opensource/LJSpeech-1.0
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: LJSpeech/ljs_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: en_US
       phonemized: true
     BerndUngerer:
-      basedir: multilingual-dataset/opensource/HUI-Audio-Corpus-German/Bernd_Ungerer
+      basedir: multilingual-dataset/knnvc/opensource/Bernd_Ungerer
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: HUI-Audio-Corpus-German/Bernd_Ungerer/berndungerer_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: de_DE
       phonemized: true
     TUX:
-      basedir: multilingual-dataset/opensource/MAILABS/es_ES/male/tux
+      basedir: multilingual-dataset/knnvc/opensource/tux
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_ES/male/tux/tux_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: es_ES
       phonemized: true
     Karen:
-      basedir: multilingual-dataset/opensource/MAILABS/es_MX/female/karen_savage
+      basedir: multilingual-dataset/knnvc/opensource/karen_savage
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/es_MX/female/karen_savage/ks_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: es_MX
       phonemized: true
     NadineEckert:
-      basedir: multilingual-dataset/opensource/MAILABS/fr_FR/female/nadine_eckert_boulet
+      basedir: multilingual-dataset/knnvc/opensource/nadine_eckert_boulet
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: MAILABS/fr_FR/female/nadine_eckert_boulet/nadineeckert_audiopath_text_sid_emotion_duration_val_filelist_phonemized.txt
       language: fr_FR
       phonemized: true
     # IIIT-HYD:
-    #   basedir: multilingual-dataset/opensource/indic-languages-tts-iiit-h
+    #   basedir: multilingual-dataset/knnvc/opensource/indic-languages-tts-iiit-h
     #   sampling_rate: 16khz_single_channel
     #   filelist_basedir: datasets/opensource/
     #   filelist: indic-languages-tts-iiit-h/hi_indic_iiit_hyderbad_audiopath_text_sid_emotion_duration_val_phonemized.txt
     #   language: hi_HI
     #   phonemized: true
     ED:
-      basedir: multilingual-dataset/opensource/TTS-Portuguese-Corpus
+      basedir: multilingual-dataset/knnvc/opensource/TTS-Portuguese-Corpus
       sampling_rate: 16khz
       filelist_basedir: multilingual-dataset/knnvc/filelists/
       filelist: TTS-Portuguese-Corpus/ed_portuguese_audiopath_transcript_sid_emotion_duration_val_phonemized.txt
@@ -111,7 +111,7 @@ data:
   mel_fmax: 8000.0
   f0_min: 80.0
   f0_max: 640.0
-  max_wav_value: 32768.0
+  max_wav_value: 1.0
   return_audio: false
   use_f0: true
   use_energy_avg: true
@@ -162,10 +162,10 @@ data:
   distance_tx_unvoiced: false
   mel_noise_scale: 0.0
   speaker_map: null
-  batch_size: 8
-  num_workers: 4
+  batch_size: 32
+  num_workers: 32
   inference_transcript: scripts/sample_inference_transcript_phonemized.txt
-  speaker_stats_path: datasets/speaker_stats/opensource_collated_stats.json
+  speaker_stats_path: datasets/speaker_stats/opensource_collated_stats_knnvc.json
   use_wave_augmentations: true
   wave_aug_config: 
     aug_types: ["none","scale_formant","scale_formant"]

@@ -136,14 +136,14 @@ class BaseAudioDataModule(pl.LightningDataModule):
         train_loader = DataLoader(
             self.trainset, num_workers=self.num_workers, shuffle=False,
             batch_size=self.batch_size, pin_memory=False, drop_last=True,
-            collate_fn=self.collate_fn, timeout=20)
+            collate_fn=self.collate_fn, timeout=20000)
         return train_loader
 
     def val_dataloader(self):
         val_loader = DataLoader(
             self.valset, num_workers=self.num_workers, shuffle=False,
             batch_size=self.batch_size, pin_memory=False, drop_last=False,
-            collate_fn=self.collate_fn, timeout=20)
+            collate_fn=self.collate_fn, timeout=20000)
         return val_loader
 
     def test_dataloader(self):
