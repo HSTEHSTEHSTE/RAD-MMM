@@ -22,7 +22,7 @@ trainer:
   limit_val_batches: null
   limit_test_batches: null
   limit_predict_batches: null
-  val_check_interval: 500
+  val_check_interval: 5000
   log_every_n_steps: 10
   accelerator: gpu
   strategy: ddp

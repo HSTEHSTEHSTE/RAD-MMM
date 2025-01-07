@@ -301,6 +301,17 @@ class AudioDataset(torch.utils.data.Dataset):
                      'language': language,
                      'phonemized': phonemized
                     })
+
+                # dataset.append(
+                #     {'audiopath': os.path.join(wav_folder_prefix, d[0]),
+                #      'text': d[1],
+                #      'speaker': d[2] + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
+                #      'emotion': d[3],
+                #      'duration': float(d[4]),
+                #      'lmdb_key': audio_lmdb_key,
+                #      'language': language,
+                #      'phonemized': phonemized
+                #     })
         return dataset
 
     def filter_by_speakers_(self, speakers, include=True):

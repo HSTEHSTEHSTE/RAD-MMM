@@ -10,29 +10,36 @@ device = 'cuda'
 knn_vc = torch.hub.load('bshall/knn-vc', 'knn_vc', prematched=True, trust_repo=True, pretrained=True)
 knn_vc.to(device)
 
+# target_spk_paths = {
+#     '10114': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10114', # Bruno Ganz
+#     '10092': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10092', # Bingbing Li
+#     '09171': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09171', # Zendaya
+#     '01493': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id01493', # Cesc Fàbregas
+#     '09185': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09185', # Zlatan Ibrahimović
+#     '05272': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05272', # Louis van Gaal
+#     '02262': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00262', # Alex Morgan
+#     '05351': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05351', # Luke Shaw
+#     '00801': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00801', # Asamoah Gyan
+#     '08327': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id08327', # Susie Wolff
+# }
 
-target_spk_paths = {
-    '10114': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10114', # Bruno Ganz
-    '10092': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb1/dev/wav/id10092', # Bingbing Li
-    '09171': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09171', # Zendaya
-    '01493': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id01493', # Cesc Fàbregas
-    '09185': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id09185', # Zlatan Ibrahimović
-    '05272': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05272', # Louis van Gaal
-    '02262': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00262', # Alex Morgan
-    '05351': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id05351', # Luke Shaw
-    '00801': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id00801', # Asamoah Gyan
-    '08327': '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/voxceleb/voxceleb2/dev/wav/id08327', # Susie Wolff
-}
+base_data_path = '/home/hltcoe/xli/ARTS/Voice-Privacy-Challenge-2024/corpora/LibriTTS/LibriTTS/train-other-500/'
+target_spks = ['57', '58', '66', '75', '94', '111', '123', '127', '199', '243', '277', '310', '331', '392', '470', '505', '766', '1006', '1107', '1124', '1230', '1367', '1414', '1474', '1505', '1544', '1601', '1699', '2090', '2100', '2122', '2270', '2297', '2488', '2545', '2553', '2895', '2930', '3006', '3033', '3054', '3144', '3196', '3346', '3400', '3798', '3848', '4205', '5230', '5569']
+print(len(target_spks))
+target_spk_paths = {}
+for target_spk in target_spks:
+    target_spk_paths[target_spk] = base_data_path + target_spk
+print(target_spk_paths)
 
 matching_sets = {}
 for target_spk in tqdm(target_spk_paths):
     target_spk_wavs = [os.path.join(dp, f) for dp, dn, filenames in os.walk(target_spk_paths[target_spk]) for f in filenames if os.path.splitext(f)[1] == '.wav']
     matching_sets[target_spk] = None
-    # matching_sets[target_spk] = knn_vc.get_matching_set(target_spk_wavs)
+    matching_sets[target_spk] = knn_vc.get_matching_set(target_spk_wavs, vad_trigger_level = 0)
 
 data_config_file = '/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless.yaml'
-target_rootdir = 'multilingual-dataset/knnvc/opensource/'
-target_filelist_basedir = 'multilingual-dataset/knnvc/filelists/'
+target_rootdir = 'multilingual-dataset/knnvc_libri/opensource/'
+target_filelist_basedir = 'multilingual-dataset/knnvc_libri/filelists/'
 with open(data_config_file) as data_config:
     data = yaml.safe_load(data_config)['data']
 file_lists = ['training_files', 'validation_files']
@@ -52,7 +59,7 @@ for file_list in file_lists:
                     file_line_elements = file_line.strip().split('|')
                     wav_name = file_line_elements[0]
                     wav_dir = wavs_dir + '/' + wav_name
-                    # query_seq = knn_vc.get_features(wav_dir)
+                    query_seq = knn_vc.get_features(wav_dir)
                     for target_spk_id in matching_sets:
                         target_wav_name = wav_name.split('.')[0] + '-' + target_spk_id + '.wav'
                         
