@@ -1,7 +1,7 @@
 model:
   use_accent: true
   n_augmentations: 7
-  n_speakers: 7
+  n_speakers: 140
   n_accents: 7
   n_accent_dim: 8
   use_accent_emb_for_encoder: true
@@ -68,7 +68,7 @@ model:
   seed: null
   unfreeze_modules: all
   binarization_start_iter: 20000
-  output_directory: exp/decoder-a
+  output_directory: exp/decoder-k_libri
   scale_mel: True
   vocoder_config_path: vocoders/hifigan_vocoder/config_16khz.json
   vocoder_checkpoint_path: vocoders/hifigan_vocoder/g_00072000

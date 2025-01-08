@@ -4,8 +4,7 @@ outdir/*
 *.pyc
 */.ipynb_checkpoints/*
 .ipynb_checkpoints/*
-tutorials/out1/*
-tutorials/run1/*
+tutorials/*
 
 # Experiment directory
 exp/*
