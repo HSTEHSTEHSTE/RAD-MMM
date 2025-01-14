@@ -38,27 +38,50 @@ _curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
 # Regular expression matching words and not words
 _words_re = re.compile(r"([a-zA-Z\u0900-\u097F]+['][a-zA-Z\u0900-\u097F]+|[a-zA-Z\u0900-\u097F]+)|([{][^}]+[}]|[^a-zA-Z\u0900-\u097F{}]+)")
 
+# _phonemizer_language_map = {
+#     'hi_HI': 'hi', 
+#     'hi': 'hi',
+#     'mar_MAR': 'mr',
+#     'te_TE': 'te',
+#     'pt_BR': 'pt-br',
+#     'en_US': 'en-us',
+#     'en': 'en-us',
+#     'de_DE': 'de',
+#     'fr_FR': 'fr-fr',
+#     'es_ES': 'es',
+#     'es_CO': 'es-419',
+#     'es_AR': 'es-419',
+#     'es_CL': 'es-419',
+#     'es_PE': 'es-419',
+#     'es_PR': 'es-419',
+#     'es_VE': 'es-419',
+#     'es_MX': 'es-419',
+#     'en_ES': 'en-us',
+#     'en_MN': 'en-us',
+#     'en_UK': 'en-gb'
+# }
+
 _phonemizer_language_map = {
-    'hi_HI': 'hi', 
-    'hi': 'hi',
-    'mar_MAR': 'mr',
-    'te_TE': 'te',
-    'pt_BR': 'pt-br',
+    'hi_HI': 'en-us', 
+    'hi': 'en-us',
+    'mar_MAR': 'en-us',
+    'te_TE': 'en-us',
+    'pt_BR': 'en-us',
     'en_US': 'en-us',
     'en': 'en-us',
-    'de_DE': 'de',
-    'fr_FR': 'fr-fr',
-    'es_ES': 'es',
-    'es_CO': 'es-419',
-    'es_AR': 'es-419',
-    'es_CL': 'es-419',
-    'es_PE': 'es-419',
-    'es_PR': 'es-419',
-    'es_VE': 'es-419',
-    'es_MX': 'es-419',
+    'de_DE': 'en-us',
+    'fr_FR': 'en-us',
+    'es_ES': 'en-us',
+    'es_CO': 'en-us',
+    'es_AR': 'en-us',
+    'es_CL': 'en-us',
+    'es_PE': 'en-us',
+    'es_PR': 'en-us',
+    'es_VE': 'en-us',
+    'es_MX': 'en-us',
     'en_ES': 'en-us',
     'en_MN': 'en-us',
-    'en_UK': 'en-gb'
+    'en_UK': 'en-us'
 }
 
 def lines_to_list(filename):

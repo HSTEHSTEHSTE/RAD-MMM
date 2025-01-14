@@ -290,13 +290,13 @@ class AudioDataset(torch.utils.data.Dataset):
             for d in data:
                 wav_name = d[0][:-4]
                 additional_spk_symbol = wav_name.split('-')
-                additional_spk_id = '-' + additional_spk_symbol[-1]
-                # additional_spk_id = additional_spk_symbol[-1]
+                # additional_spk_id = '-' + additional_spk_symbol[-1]
+                additional_spk_id = additional_spk_symbol[-1]
                 dataset.append(
                     {'audiopath': os.path.join(wav_folder_prefix, d[0]),
                      'text': d[1],
-                     'speaker': d[2] + additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
-                    #  'speaker': additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
+                    #  'speaker': d[2] + additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
+                     'speaker': additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
                      'emotion': d[3],
                      'duration': float(d[4]),
                      'lmdb_key': audio_lmdb_key,

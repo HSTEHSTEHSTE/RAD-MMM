@@ -19,20 +19,30 @@ from common import Encoder
 import torch
 
 # radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-a/latest-epoch_33-iter_199999.ckpt"
-radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k/latest-epoch_5-iter_84999.ckpt"
+# radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k/latest-epoch_5-iter_84999.ckpt"
+# radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k_libri/latest-epoch_1-iter_44999.ckpt"
+# radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k_l20/latest-epoch_1-iter_29999.ckpt"
+radmmm_model_path = "/home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k_l20_en/latest-epoch_3-iter_89999.ckpt"
 model_config_paths = [
     # "configs/RADMMM_model_config.yaml",
-    "configs/RADMMM_model_config_knnvc.yaml",
+    # "configs/RADMMM_model_config_knnvc.yaml",
+    # "configs/RADMMM_model_config_knnvc_libri.yaml",
+    # "configs/RADMMM_model_config_knnvc_l20.yaml",
+    "configs/RADMMM_model_config_knnvc_l20_en.yaml",
     "configs/RADMMM_f0model_config.yaml",
     "configs/RADMMM_energymodel_config.yaml",
     "configs/RADMMM_durationmodel_config.yaml",
     "configs/RADMMM_vpredmodel_config.yaml",
 ]
 # data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless.yaml"
-data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless_knnvc.yaml"
+# data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless_knnvc.yaml"
+# data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless_knnvc_libri.yaml"
+# data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless_knnvc_l20.yaml"
+data_config_path = "/home/hltcoe/xli/ARTS/RAD-MMM/configs/RADMMM_opensource_data_config_phonemizerless_knnvc_l20_en.yaml"
 voc_model_path = "vocoders/hifigan_vocoder/g_00072000"
 voc_config_path = "vocoders/hifigan_vocoder/config_16khz.json"
-phonemizer_cfg='{"en_US": "assets/en_US_word_ipa_map.txt","es_MX": "assets/es_MX_word_ipa_map.txt","de_DE": "assets/de_DE_word_ipa_map.txt","en_UK": "assets/en_UK_word_ipa_map.txt","es_CO": "assets/es_CO_word_ipa_map.txt","es_ES": "assets/es_ES_word_ipa_map.txt","fr_FR": "assets/fr_FR_word_ipa_map.txt","hi_HI": "assets/hi_HI_word_ipa_map.txt","pt_BR": "assets/pt_BR_word_ipa_map.txt","te_TE": "assets/te_TE_word_ipa_map.txt"}'
+# phonemizer_cfg='{"en_US": "assets/en_US_word_ipa_map.txt","es_MX": "assets/es_MX_word_ipa_map.txt","de_DE": "assets/de_DE_word_ipa_map.txt","en_UK": "assets/en_UK_word_ipa_map.txt","es_CO": "assets/es_CO_word_ipa_map.txt","es_ES": "assets/es_ES_word_ipa_map.txt","fr_FR": "assets/fr_FR_word_ipa_map.txt","hi_HI": "assets/hi_HI_word_ipa_map.txt","pt_BR": "assets/pt_BR_word_ipa_map.txt","te_TE": "assets/te_TE_word_ipa_map.txt"}'
+phonemizer_cfg='{"en_US": "assets/en_US_word_ipa_map.txt","es_MX": "assets/en_US_word_ipa_map.txt","de_DE": "assets/en_US_word_ipa_map.txt","en_UK": "assets/en_US_word_ipa_map.txt","es_CO": "assets/en_US_word_ipa_map.txt","es_ES": "assets/en_US_word_ipa_map.txt","fr_FR": "assets/en_US_word_ipa_map.txt","hi_HI": "assets/en_US_word_ipa_map.txt","pt_BR": "assets/en_US_word_ipa_map.txt","te_TE": "assets/en_US_word_ipa_map.txt"}'
 
 # load the config
 model_config = {
@@ -131,15 +141,15 @@ def run_inference(script, speaker_id, input_language_id, target_accent_id):
     return model.forward(inp)
 
 # fourth example - native german speaker speaking english in german accent
-text = "What is the most resilient parasite"
-# speaker_id = "mailabs-nadineeckert-other"
-speaker_id = "ljs-00801-other"
+text = "Il profite du désaccord entre les différents hommes politiques."
+speaker_id = "1006-other"
 input_language_id = "fr_FR"
 target_accent_id = "en_US"
 
 script = data_module.tp.convert_to_phoneme(text=text, phoneme_dict=data_module.tp.phonemizer_backend_dict[input_language_id])
 
 print("Converted the sentence to phonemes: ", script)
+
 
 output_file_path = run_inference(script=script, 
                                  speaker_id=speaker_id, 
