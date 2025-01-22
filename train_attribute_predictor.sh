@@ -24,7 +24,9 @@ cd /home/hltcoe/xli/ARTS/RAD-MMM
 # # knnvc augmentation: l20 with only en_US phonemizer
 # python tts_main.py fit -c configs/RADMMM_f0model_config.yaml -c configs/RADMMM_energymodel_config.yaml -c configs/RADMMM_durationmodel_config.yaml -c configs/RADMMM_vpredmodel_config.yaml -c configs/RADMMM_train_config.yaml -c configs/RADMMM_opensource_data_config_phonemizerless_knnvc_l20_en.yaml -c configs/RADMMM_model_config_knnvc_l20_en.yaml --trainer.num_nodes=1 --trainer.devices=1 --trainer.logger=WandbLogger --ckpt_path /home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k_l20_en/latest-epoch_1-iter_54999.ckpt
 
-# knnvc augmentation: l20 with no phonemizer
-python tts_main.py fit -c configs/RADMMM_f0model_config.yaml -c configs/RADMMM_energymodel_config.yaml -c configs/RADMMM_durationmodel_config.yaml -c configs/RADMMM_vpredmodel_config.yaml -c configs/RADMMM_train_config.yaml -c configs/RADMMM_opensource_data_config_phonemizerless_knnvc_l20_letters.yaml -c configs/RADMMM_model_config_knnvc_l20_letters.yaml --trainer.num_nodes=1 --trainer.devices=1 --trainer.logger=WandbLogger
+# # knnvc augmentation: l20 with no phonemizer
+# python tts_main.py fit -c configs/RADMMM_f0model_config.yaml -c configs/RADMMM_energymodel_config.yaml -c configs/RADMMM_durationmodel_config.yaml -c configs/RADMMM_vpredmodel_config.yaml -c configs/RADMMM_train_config.yaml -c configs/RADMMM_opensource_data_config_phonemizerless_knnvc_l20_letters.yaml -c configs/RADMMM_model_config_knnvc_l20_letters.yaml --trainer.num_nodes=1 --trainer.devices=1 --trainer.logger=WandbLogger --ckpt_path /home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-k_l20_letters_new/latest-epoch_3-iter_114999.ckpt
 
-# --ckpt_path /home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-a/latest-epoch_20-iter_124999.ckpt
+# mls
+python tts_main.py fit -c configs/RADMMM_f0model_config.yaml -c configs/RADMMM_energymodel_config.yaml -c configs/RADMMM_durationmodel_config.yaml -c configs/RADMMM_vpredmodel_config.yaml -c configs/RADMMM_train_config.yaml -c configs/RADMMM_opensource_data_config_phonemizerless_mls.yaml -c configs/RADMMM_model_config_mls.yaml --trainer.num_nodes=1 --trainer.devices=1 --trainer.logger=WandbLogger --ckpt_path /home/hltcoe/xli/ARTS/RAD-MMM/exp/decoder-mls/latest-epoch_0-iter_4999.ckpt
+

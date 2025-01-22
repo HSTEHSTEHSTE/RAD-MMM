@@ -14,6 +14,7 @@ exp/*
 
 # Actual data: ./datasets contains data mappings
 multilingual-dataset/*
+corpora/*
 
 # Generated config file
 config.yaml

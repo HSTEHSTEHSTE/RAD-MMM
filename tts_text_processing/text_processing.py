@@ -38,51 +38,51 @@ _curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
 # Regular expression matching words and not words
 _words_re = re.compile(r"([a-zA-Z\u0900-\u097F]+['][a-zA-Z\u0900-\u097F]+|[a-zA-Z\u0900-\u097F]+)|([{][^}]+[}]|[^a-zA-Z\u0900-\u097F{}]+)")
 
-# _phonemizer_language_map = {
-#     'hi_HI': 'hi', 
-#     'hi': 'hi',
-#     'mar_MAR': 'mr',
-#     'te_TE': 'te',
-#     'pt_BR': 'pt-br',
-#     'en_US': 'en-us',
-#     'en': 'en-us',
-#     'de_DE': 'de',
-#     'fr_FR': 'fr-fr',
-#     'es_ES': 'es',
-#     'es_CO': 'es-419',
-#     'es_AR': 'es-419',
-#     'es_CL': 'es-419',
-#     'es_PE': 'es-419',
-#     'es_PR': 'es-419',
-#     'es_VE': 'es-419',
-#     'es_MX': 'es-419',
-#     'en_ES': 'en-us',
-#     'en_MN': 'en-us',
-#     'en_UK': 'en-gb'
-# }
-
 _phonemizer_language_map = {
-    'hi_HI': 'en-us', 
-    'hi': 'en-us',
-    'mar_MAR': 'en-us',
-    'te_TE': 'en-us',
-    'pt_BR': 'en-us',
+    'hi_HI': 'hi', 
+    'hi': 'hi',
+    'mar_MAR': 'mr',
+    'te_TE': 'te',
+    'pt_BR': 'pt-br',
     'en_US': 'en-us',
     'en': 'en-us',
-    'de_DE': 'en-us',
-    'fr_FR': 'en-us',
-    'es_ES': 'en-us',
-    'es_CO': 'en-us',
-    'es_AR': 'en-us',
-    'es_CL': 'en-us',
-    'es_PE': 'en-us',
-    'es_PR': 'en-us',
-    'es_VE': 'en-us',
-    'es_MX': 'en-us',
+    'de_DE': 'de',
+    'fr_FR': 'fr-fr',
+    'es_ES': 'es',
+    'es_CO': 'es-419',
+    'es_AR': 'es-419',
+    'es_CL': 'es-419',
+    'es_PE': 'es-419',
+    'es_PR': 'es-419',
+    'es_VE': 'es-419',
+    'es_MX': 'es-419',
     'en_ES': 'en-us',
     'en_MN': 'en-us',
-    'en_UK': 'en-us'
+    'en_UK': 'en-gb'
 }
+
+# _phonemizer_language_map = {
+#     'hi_HI': 'en-us', 
+#     'hi': 'en-us',
+#     'mar_MAR': 'en-us',
+#     'te_TE': 'en-us',
+#     'pt_BR': 'en-us',
+#     'en_US': 'en-us',
+#     'en': 'en-us',
+#     'de_DE': 'en-us',
+#     'fr_FR': 'en-us',
+#     'es_ES': 'en-us',
+#     'es_CO': 'en-us',
+#     'es_AR': 'en-us',
+#     'es_CL': 'en-us',
+#     'es_PE': 'en-us',
+#     'es_PR': 'en-us',
+#     'es_VE': 'en-us',
+#     'es_MX': 'en-us',
+#     'en_ES': 'en-us',
+#     'en_MN': 'en-us',
+#     'en_UK': 'en-us'
+# }
 
 def lines_to_list(filename):
     with open(filename, encoding='utf-8') as f:
@@ -98,17 +98,18 @@ class TextProcessing(object):
                  append_space_to_text=False, add_bos_eos_to_text=False,
                  encoding='latin-1',
                  dict_split_token='\t', external_symbol_set_path=None,
-                 g2p_type='phonemizer',
+                 g2p_type='none',
                  phonemizer_cfg=None):
         
         self.g2p_type = g2p_type
+        print(self.g2p_type)
 
         if heteronyms_path is not None and heteronyms_path != '':
             self.heteronyms = set(lines_to_list(heteronyms_path))
         else:
             self.heteronyms = []
         
-        if g2p_type == 'phonemizer':
+        if g2p_type == 'phonemizer' or g2p_type == 'none':
             self.phonemedict = None
         else:
             self.phonemedict = Grapheme2PhonemeDictionary(
@@ -343,7 +344,8 @@ class TextProcessing(object):
                 print(f'{language}|{text_phoneme}')
                 text_encoded = self.text_to_sequence(text_phoneme)
                 print(f'{language}|{text_encoded}')
-                
+            elif self.g2p_type == 'none':
+                text_encoded = self.text_to_sequence(text)
 
         else:
             # text is already phonemized

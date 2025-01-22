@@ -1,7 +1,7 @@
 model:
   use_accent: true
   n_augmentations: 7
-  n_speakers: 20
+  n_speakers: 1611
   n_accents: 7
   n_accent_dim: 8
   use_accent_emb_for_encoder: true
@@ -62,13 +62,13 @@ model:
   optim_algo: RAdam
   learning_rate: 0.0001
   weight_decay: 1.0e-06
-  n_text_tokens: 426
+  n_text_tokens: 150
   sigma: 1.0
   iters_per_checkpoint: 500
   seed: null
   unfreeze_modules: all
   binarization_start_iter: 20000
-  output_directory: exp/decoder-k_l20_letters_new
+  output_directory: exp/decoder-mls
   scale_mel: True
   vocoder_config_path: vocoders/hifigan_vocoder/config_16khz.json
   vocoder_checkpoint_path: vocoders/hifigan_vocoder/g_00072000

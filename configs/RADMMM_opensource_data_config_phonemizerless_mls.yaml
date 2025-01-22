@@ -1,0 +1,157 @@
+data:
+  dataloader_type: txt
+  use_multilingual_model: true
+  use_prior_interpolator: true
+  training_files:
+    de:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: de_train.txt
+      language: de
+      phonemized: true
+    en:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/LibriSpeech
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: en_train.txt
+      language: en
+      phonemized: true
+    es:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: es_train.txt
+      language: es
+      phonemized: true
+    fr:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: fr_train.txt
+      language: fr
+      phonemized: true
+    it:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: it_train.txt
+      language: it
+      phonemized: true
+    nl:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: nl_train.txt
+      language: nl
+      phonemized: true
+    pl:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: pl_train.txt
+      language: pl
+      phonemized: true
+  validation_files:
+    de:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: de_dev.txt
+      language: de
+      phonemized: true
+    en:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/LibriSpeech
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: en_dev.txt
+      language: en
+      phonemized: true
+    es:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: es_dev.txt
+      language: es
+      phonemized: true
+    fr:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: fr_dev.txt
+      language: fr
+      phonemized: true
+    it:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: it_dev.txt
+      language: it
+      phonemized: true
+    nl:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: nl_dev.txt
+      language: nl
+      phonemized: true
+    pl:
+      basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/
+      sampling_rate: ~
+      filelist_basedir: /home/hltcoe/xli/ARTS/RAD-MMM/corpora/mls/filelists
+      filelist: pl_dev.txt
+      language: pl
+      phonemized: true
+  filter_length: 1024
+  hop_length: 256
+  win_length: 1024
+  sampling_rate: 16000
+  n_mel_channels: 80
+  mel_fmin: 0.0
+  mel_fmax: 8000.0
+  f0_min: 80.0
+  f0_max: 640.0
+  max_wav_value: 1.0
+  return_audio: false
+  use_f0: true
+  use_energy_avg: true
+  use_log_f0: true
+  use_scaled_energy: true
+  symbol_set: mls
+  cleaner_names:
+  - radtts_cleaners
+  heteronyms_path: tts_text_processing/heteronyms
+  phoneme_dict_path: tts_text_processing/cmudict-0.7b
+  p_phoneme: 1.0
+  handle_phoneme: word
+  handle_phoneme_ambiguous: first
+  g2p_type: none
+  speaker_ids: null
+  include_speakers: null
+  include_emotions: [[['other'],true]]
+  n_frames: -1
+  use_attn_prior_masking: true
+  prepend_space_to_text: true
+  append_space_to_text: true
+  add_bos_eos_to_text: false
+  betabinom_cache_path: mls_cache/
+  betabinom_scaling_factor: 0.05
+  lmdb_cache_path: null
+  dur_min: 0.1
+  dur_max: 30.0
+  combine_speaker_and_emotion: true
+  distance_tx_unvoiced: false
+  mel_noise_scale: 0.0
+  speaker_map: null
+  batch_size: 11
+  num_workers: 32
+  speaker_stats_path: datasets/speaker_stats/opensource_collated_stats_mls.json
+  use_wave_augmentations: true
+  wave_aug_config: 
+    aug_types: ["none","scale_formant","scale_formant"]
+    aug_scales: [1.0,0.9,1.10]
+    aug_probabilities: [0.6,0.2,0.2]
+    aug_languages_applicable: ["de","fr","de","it","pt","es","en"]
+    num_aug_in_batch: 1
+    randomize_transform: false
+    n_augmentations: 2

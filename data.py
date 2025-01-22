@@ -44,7 +44,7 @@ import numpy as np
 import lmdb
 import copy
 import pickle as pkl
-import torch
+import torch, torchaudio
 import torch.utils.data
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
@@ -113,8 +113,11 @@ def beta_binomial_prior_distribution(phoneme_count, mel_count,
 
 def load_wav_to_torch(full_path):
     """ Loads wavdata into torch array """
-    sampling_rate, data = read(full_path)
-    return torch.from_numpy(np.array(data)).float(), sampling_rate
+    data, sampling_rate = torchaudio.load(full_path)
+    data = data.squeeze(0)
+    return data, sampling_rate
+    # sampling_rate, data = read(full_path)
+    # return torch.from_numpy(np.array(data)).float(), sampling_rate
 
 
 class AudioDataset(torch.utils.data.Dataset):
@@ -253,10 +256,9 @@ class AudioDataset(torch.utils.data.Dataset):
         else:
             self.speaker_stats = None
 
-        if len(list(self.speaker_stats.keys())) == 0:
-            self.speaker_stats = self.compute_speaker_prosody_statistics()
-            with open(self.speaker_stats_path, 'w') as f:
-                json.dump(self.speaker_stats, f)
+        self.speaker_stats = self.compute_speaker_prosody_statistics(self.speaker_stats)
+        with open(self.speaker_stats_path, 'w') as f:
+            json.dump(self.speaker_stats, f)
 
     def load_data(self, datasets, split='|'):
         dataset = []
@@ -283,37 +285,38 @@ class AudioDataset(torch.utils.data.Dataset):
                     lock=False).begin()
                 audio_lmdb_key = dset_name
 
-            wav_folder_prefix = os.path.join(folder_path, sampling_rate)
+            # wav_folder_prefix = os.path.join(folder_path, sampling_rate)
+            wav_folder_prefix = folder_path
             with open(filelist_path, encoding='utf-8') as f:
                 data = [line.strip().split(split) for line in f]
             # print(f'processing file: {filelist_path}')
             for d in data:
-                wav_name = d[0][:-4]
-                additional_spk_symbol = wav_name.split('-')
-                # additional_spk_id = '-' + additional_spk_symbol[-1]
-                additional_spk_id = additional_spk_symbol[-1]
-                dataset.append(
-                    {'audiopath': os.path.join(wav_folder_prefix, d[0]),
-                     'text': d[1],
-                    #  'speaker': d[2] + additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
-                     'speaker': additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
-                     'emotion': d[3],
-                     'duration': float(d[4]),
-                     'lmdb_key': audio_lmdb_key,
-                     'language': language,
-                     'phonemized': phonemized
-                    })
-
+                # wav_name = d[0][:-4]
+                # additional_spk_symbol = wav_name.split('-')
+                # # additional_spk_id = '-' + additional_spk_symbol[-1]
+                # additional_spk_id = additional_spk_symbol[-1]
                 # dataset.append(
                 #     {'audiopath': os.path.join(wav_folder_prefix, d[0]),
                 #      'text': d[1],
-                #      'speaker': d[2] + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
+                #     #  'speaker': d[2] + additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
+                #      'speaker': additional_spk_id + '-' + d[3] if self.combine_speaker_and_emotion else d[2] + additional_spk_id,
                 #      'emotion': d[3],
                 #      'duration': float(d[4]),
                 #      'lmdb_key': audio_lmdb_key,
                 #      'language': language,
                 #      'phonemized': phonemized
                 #     })
+
+                dataset.append(
+                    {'audiopath': os.path.join(wav_folder_prefix, d[0]),
+                     'text': d[1],
+                     'speaker': d[2] + '-' + d[3] if self.combine_speaker_and_emotion else d[2],
+                     'emotion': d[3],
+                     'duration': float(d[4]),
+                     'lmdb_key': audio_lmdb_key,
+                     'language': language,
+                     'phonemized': phonemized
+                    })
         return dataset
 
     def filter_by_speakers_(self, speakers, include=True):
@@ -648,51 +651,52 @@ class AudioDataset(torch.utils.data.Dataset):
 
         return data_dict
 
-    def compute_speaker_prosody_statistics(self, num_files = 100):
-        collated_speaker_stats_dict = {}
+    def compute_speaker_prosody_statistics(self, speaker_stats, num_files = 100):
+        collated_speaker_stats_dict = speaker_stats
         for speaker in self.speaker_ids:
-            speaker_attr_dict = {}
-            trainset = copy.deepcopy(self)
-            trainset.speaker_stats = None
-            trainset.wave_augmentations = None
-            trainset.filter_by_duration_(trainset.dur_min, trainset.dur_max)
-            trainset.filter_by_speakers_((speaker, ), True)
-            data_loader = DataLoader(
-                trainset, num_workers = 32, shuffle = False,
-                batch_size = num_files, pin_memory = False, drop_last = False,
-                collate_fn = DataCollate())
+            if not speaker in collated_speaker_stats_dict:
+                speaker_attr_dict = {}
+                trainset = copy.deepcopy(self)
+                trainset.speaker_stats = None
+                trainset.wave_augmentations = None
+                trainset.filter_by_duration_(trainset.dur_min, trainset.dur_max)
+                trainset.filter_by_speakers_((speaker, ), True)
+                data_loader = DataLoader(
+                    trainset, num_workers = 32, shuffle = False,
+                    batch_size = num_files, pin_memory = False, drop_last = False,
+                    collate_fn = DataCollate())
         
-            for batch in data_loader:
-                f0 = batch['f0']
-                voiced_mask = batch['voiced_mask']
-                out_lens = batch['output_lengths']
-                energy_avg = batch['energy_avg']
-                mel = batch['mel']
-                
-                log_f0 = f0.flatten()[voiced_mask.flatten().bool()]
-                f0 = torch.exp(log_f0)
-                f0_median = torch.median(f0)
-                f0_mean = f0.mean()
-                f0_std = f0.std()
-                log_f0_mean = log_f0.mean()
-                log_f0_std = log_f0.std()
-                log_f0_median = torch.median(log_f0)
+                for batch in data_loader:
+                    f0 = batch['f0']
+                    voiced_mask = batch['voiced_mask']
+                    out_lens = batch['output_lengths']
+                    energy_avg = batch['energy_avg']
+                    mel = batch['mel']
+                    
+                    log_f0 = f0.flatten()[voiced_mask.flatten().bool()]
+                    f0 = torch.exp(log_f0)
+                    f0_median = torch.median(f0)
+                    f0_mean = f0.mean()
+                    f0_std = f0.std()
+                    log_f0_mean = log_f0.mean()
+                    log_f0_std = log_f0.std()
+                    log_f0_median = torch.median(log_f0)
 
-                mask = get_mask_from_lengths(out_lens)
-                energy_mean = energy_avg[mask].mean()
-                energy_std = energy_avg[mask].std()
-                speaker_attr_dict['f0_median'] = f0_median.item()
-                speaker_attr_dict['f0_mean'] = f0_mean.item()
-                speaker_attr_dict['f0_std'] = f0_std.item()
-                speaker_attr_dict['log_f0_median'] = log_f0_median.item()
-                speaker_attr_dict['log_f0_mean'] = log_f0_mean.item()
-                speaker_attr_dict['log_f0_std'] = log_f0_std.item()
-                speaker_attr_dict['energy_mean'] = energy_mean.item()
-                speaker_attr_dict['energy_std'] = energy_std.item()
-                speaker_attr_dict['n_files'] = mel.shape[0]
-                print(speaker, speaker_attr_dict)
-                collated_speaker_stats_dict[speaker] = speaker_attr_dict
-                break
+                    mask = get_mask_from_lengths(out_lens)
+                    energy_mean = energy_avg[mask].mean()
+                    energy_std = energy_avg[mask].std()
+                    speaker_attr_dict['f0_median'] = f0_median.item()
+                    speaker_attr_dict['f0_mean'] = f0_mean.item()
+                    speaker_attr_dict['f0_std'] = f0_std.item()
+                    speaker_attr_dict['log_f0_median'] = log_f0_median.item()
+                    speaker_attr_dict['log_f0_mean'] = log_f0_mean.item()
+                    speaker_attr_dict['log_f0_std'] = log_f0_std.item()
+                    speaker_attr_dict['energy_mean'] = energy_mean.item()
+                    speaker_attr_dict['energy_std'] = energy_std.item()
+                    speaker_attr_dict['n_files'] = mel.shape[0]
+                    print(speaker, speaker_attr_dict)
+                    collated_speaker_stats_dict[speaker] = speaker_attr_dict
+                    break
 
         return collated_speaker_stats_dict
 

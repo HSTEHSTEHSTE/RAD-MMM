@@ -125,26 +125,7 @@ data:
   p_phoneme: 1.0
   handle_phoneme: word
   handle_phoneme_ambiguous: first
-  g2p_type: phonemizer
-  phonemizer_cfg: 
-    en_US:
-      assets/en_US_word_ipa_map.txt
-    de_DE:
-      assets/en_US_word_ipa_map.txt
-    en_UK:
-      assets/en_US_word_ipa_map.txt
-    es_CO:
-      assets/en_US_word_ipa_map.txt
-    es_ES:
-      assets/en_US_word_ipa_map.txt
-    fr_FR:
-      assets/en_US_word_ipa_map.txt
-    hi_HI:
-      assets/en_US_word_ipa_map.txt
-    pt_BR:
-      assets/en_US_word_ipa_map.txt
-    te_TE:
-      assets/en_US_word_ipa_map.txt
+  g2p_type: none
   speaker_ids: null
   include_speakers: null
   include_emotions: [[['other'],true]]

@@ -204,6 +204,13 @@ def get_symbols(symbol_set, external_symbol_set_path=None):
         _letters = 'abcdefghijklmnopqrstuvwxyz'
         _arpabet = ["@" + s for s in arpabet]
         symbols = list(_pad + _special + _punctuation + _letters) + _arpabet
+    elif symbol_set == 'mls':
+        _pad = '_ '
+        _punctuation = "'"
+        _special = '-'
+        _letters = 'cúméôzaërväżñńçgxqćoûnźębfłąöklÿápïãdîàüsyêíhòwuìèiœóeâśùßtæjõ'
+        _arpabet = ["@" + s for s in arpabet]
+        symbols = list(_pad + _punctuation + _special + _letters) + _arpabet
     elif symbol_set == 'english_expanded':
         _punctuation = '!\'",.:;? '
         _math = '#%&*+-/[]()'
